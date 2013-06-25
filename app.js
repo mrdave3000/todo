@@ -4,7 +4,6 @@
  */
 
 var express = require('express');
-
 var app = module.exports = express.createServer();
 
 // Configuration
@@ -15,9 +14,9 @@ app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
   app.use(express.bodyParser());
-  app.use(express.logger());
-  app.use(express.session());
-  app.use(express.cookieDecoder());
+ // app.use(express.logger());
+  //app.use(express.session());
+  //app.use(express.cookieParser());
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
 });

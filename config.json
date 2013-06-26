@@ -1,3 +1,33 @@
 {
-	"dbConnect":"mongodc://localhost/express-todo"
+	"dbConnect":"mongodc://localhost/express-todo",
+	
+	"userData":{
+		"username":"User name",
+		"email":"johndoe@gmail.com",
+		"password":"Please enter Password",
+		"birthdate":[ 0 , 0 , 0]
+		},
+	
+	"Artist":{
+		"bandName":"e.g. AC/DC",
+		"years":"1973",
+		"BandPlace":"Sydney, Australia",
+		"genres":"#Rock #RockNRoll #HeavyMetal",
+		"bio":"",
+		"staff":"",
+		"contact":""
+
+
+		},
+	"Venue":{
+		"venueName":"e.g. Hard Rock Cafe",
+		"venueLocation":{
+			"adress":"279 Yonge St",
+			"city":"Toronto",
+			"country":"Canada"
+			},
+		"genres":"#Rock #RockNRoll #HeavyMetal",
+		"contact":""
+
+		}
 }

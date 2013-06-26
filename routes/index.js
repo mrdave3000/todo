@@ -19,7 +19,7 @@ var definitions = require('../config.json');
 exports.index = function(req, res){
 	Todo.find(function (err, todos, count){
 	  if(!err){
-	  	console.log(definitions.dbConnect);
+	  	//console.log(definitions.dbConnect);
 	  	res.render('index', { title: 'My Todo List!',
 	  						  todos: todos  
 	  	

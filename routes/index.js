@@ -7,6 +7,8 @@
 var mongoose = require('mongoose'),
     utils    = require( 'connect' ).utils;
 
+var definitions = require('../configure.json');
+
 //models
 var	Todo = mongoose.model('Todo'),
 	User = mongoose.model('User');
@@ -14,11 +16,13 @@ var	Todo = mongoose.model('Todo'),
 
 
 
+
+
 exports.index = function(req, res){
 	Todo.find(function (err, todos, count){
 	  if(!err){
-	  	console.log(todos);
-	  	res.render('index', { title: 'My Todo List!',
+	  	console.log(definitions);
+	  	res.render('index', { title: definitions.indexMessages[0],
 	  						  todos: todos  
 	  	
 	  	});
@@ -26,7 +30,7 @@ exports.index = function(req, res){
 	  
 	  }else{
 
-	  	res.render('index', { title: 'Error on DB' });
+	  	res.render('index', { title: definitions.indexMessages[2] });
 	  	
 	  }
 	  
@@ -41,7 +45,7 @@ exports.create = function (req, res){
 		if(!err){
 			res.redirect('/');
 		}else{
-			console.log("error saving model");
+			console.log(definitions.indexMessages[2]);
 		}
 	});
 };
@@ -56,11 +60,11 @@ exports.destroy = function (req, res){
 				
 				}else{
 
-					res.render('index', {title: 'Error Deleting Post!'});
+					res.render('index', {title: definitions.indexMessages[2]});
 				}
 			});
 		}else{
-			res.render('index',{title:'no Such Id in DB'});
+			res.render('index',{title: definitions.indexMessages[2]});
 		}
 	});
 
@@ -69,7 +73,7 @@ exports.destroy = function (req, res){
 exports.edit = function(req, res){
 	Todo.find(function (err, todos){
 		res.render('edit', {	
-			title:'edit your list',
+			title: definitions.indexMessages[1],
 			todos: todos,
 			current: req.params.id
 
@@ -88,7 +92,7 @@ exports.update = function (req, res){
 
 			}else{
 
-					res.render('index', {title: 'Error Deleting Post!'});
+					res.render('index', {title: definitions.indexMessages[4] });
 			}
 		});
 	});

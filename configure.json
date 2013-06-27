@@ -1,0 +1,18 @@
+{
+	"dbConnect":"mongod://localhost/express-todo",
+	"TodoSchema":"Todo",
+	"indexMessages": [ 
+
+	
+		"Welcome to Your Todo List",
+	
+		"Edit that post!",
+	
+		"Database Error!",
+	
+		"Post not found",
+	
+		"Error Deleting Post"
+		]
+
+}

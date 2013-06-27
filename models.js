@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var definitions = require('./configure.json');
 
 var Todo = new Schema({
 	user_id : String,
@@ -7,7 +8,7 @@ var Todo = new Schema({
 	update_at: Date
 });
 
-var user = new Schema({
+var User = new Schema({
 	email: String,
 	user_name: String,
 	password: String, 
@@ -15,4 +16,5 @@ var user = new Schema({
 });
 
 mongoose.model('Todo', Todo);
-mongoose.connect('mongodc://localhost/express-todo');
+mongoose.model('User', User);
+mongoose.connect( definitions.dbConnect );

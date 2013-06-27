@@ -3,28 +3,46 @@
  * Module dependencies.
  */
 
-var express = require('express');
+var express = require('express'),
+	mongoose = require('mongoose'),
+	MongoStore = require('connect-mongo')(express);
 
 var app = module.exports = express.createServer();
 
 // Configuration
 	require('./models');
 var routes = require('./routes');
+var definitions = require('./configure.json');
+//var db = mongoose.connect(app.set('db-uri')); 
+
 
 app.configure(function(){
+
+  app.set('db-uri', definitions.dbConnect);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
   app.use(express.bodyParser());
   app.use(express.logger());
-  app.use(express.session());
-  app.use(express.cookieDecoder());
+  app.use(express.cookieParser());
+  app.use(express.session({
+    	secret: 'Your Secret',
+    	cookie: {
+    		maxAge : 10000
+    	},
+    	store: new MongoStore({
+    		db : 'sessionstore'
+    	})
+    })
+  );
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
+
 });
 
 app.configure('development', function(){
 
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+
 });
 
 app.configure('production', function(){
@@ -33,7 +51,14 @@ app.configure('production', function(){
 
 // Routes
 
-app.get('/', routes.index);
+app.get('/', routes.index); //function (req, res){
+
+//	var previous      = req.session.value || 0;
+//  	req.session.value = previous + 1;
+//  	res.send('<h1>Previous value: ' + previous + '</h1>');
+
+//});
+
 app.post('/create', routes.create);
 app.get('/destroy/:id', routes.destroy);
 app.get('/edit/:id', routes.edit);

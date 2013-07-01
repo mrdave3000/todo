@@ -3,10 +3,14 @@
  * Module dependencies.
  */
 
+<<<<<<< HEAD
 var express = require('express'),
 	mongoose = require('mongoose'),
 	MongoStore = require('connect-mongo')(express);
 
+=======
+var express = require('express');
+>>>>>>> d20525b7b19e104380f460b9308bd3cb6ead5a2b
 var app = module.exports = express.createServer();
 
 // Configuration
@@ -22,6 +26,7 @@ app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
   app.use(express.bodyParser());
+<<<<<<< HEAD
   app.use(express.logger());
   app.use(express.cookieParser());
   app.use(express.session({
@@ -34,6 +39,11 @@ app.configure(function(){
     	})
     })
   );
+=======
+ // app.use(express.logger());
+  //app.use(express.session());
+  //app.use(express.cookieParser());
+>>>>>>> d20525b7b19e104380f460b9308bd3cb6ead5a2b
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
 

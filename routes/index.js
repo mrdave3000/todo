@@ -14,6 +14,8 @@ var	Todo = mongoose.model('Todo'),
 	User = mongoose.model('User');
 
 
+var definitions = require('../config.json');
+
 
 
 
@@ -21,8 +23,13 @@ var	Todo = mongoose.model('Todo'),
 exports.index = function(req, res){
 	Todo.find(function (err, todos, count){
 	  if(!err){
+<<<<<<< HEAD
 	  	console.log(definitions);
 	  	res.render('index', { title: definitions.indexMessages[0],
+=======
+	  	//console.log(definitions.dbConnect);
+	  	res.render('index', { title: 'My Todo List!',
+>>>>>>> d20525b7b19e104380f460b9308bd3cb6ead5a2b
 	  						  todos: todos  
 	  	
 	  	});

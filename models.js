@@ -7,20 +7,15 @@ var Todo = new Schema({
 	user_id : String,
 	content: String,
 	update_at: Date
-});
+}, { strict: false });
 
-var User = new Schema({
-	email: String,
-	user_name: String,
-	password: String, 
-	joined: Date
-});
+var User = new Schema({}, { strict: false });
+var Venue = new Schema({}, { strict: false });
+var Artist = new Schema({},{ strict: false });
 
 mongoose.model('Todo', Todo);
-<<<<<<< HEAD
 mongoose.model('User', User);
+mongoose.model('Artist', Artist);
+mongoose.model('Venue', Venue);
 mongoose.connect( definitions.dbConnect );
-=======
-mongoose.model('User', User)
-mongoose.connect('mongodc://localhost/express-todo');
->>>>>>> d20525b7b19e104380f460b9308bd3cb6ead5a2b
+

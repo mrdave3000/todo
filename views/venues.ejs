@@ -1,0 +1,12 @@
+<h1 id="page-title"><%= title %></h1>
+<% venues.forEach( function ( venue ){ %>
+	
+	<% var obj = venue.toJSON(venue) %>
+	<% //console.log(obj) %>
+  <div class="item">
+  	<% for (var keys in obj){ if( keys !== 'password' ){%>
+    <a id="<%= keys %>">  <%= obj[keys] %> </a><br>
+    <% } }%>
+    <a class="del-btn" id="<%= venue.id %>" href="/venue/destroy/<%= venue.id %>" title="Delete this todo item">Delete</a>
+  </div>
+<% }); %>

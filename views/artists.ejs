@@ -1,0 +1,12 @@
+<h1 id="page-title"><%= title %></h1>
+<% artists.forEach( function ( artist ){ %>
+	
+	<% var obj = artist.toJSON(artist) %>
+	<% //console.log(obj) %>
+  <div class="item">
+  	<% for (var keys in obj){ if( keys !== 'password' ){%>
+    <a id="<%= keys %>">  <%= obj[keys] %> </a><br>
+    <% } }%>
+    <a class="del-btn" id="<%= artist.id %>" href="/artist/destroy/<%= artist.id %>" title="Delete this todo item">Delete</a>
+  </div>
+<% }); %>

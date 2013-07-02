@@ -5,10 +5,10 @@
 		"username":"User name",
 		"email":"johndoe@gmail.com",
 		"password":"Please enter Password",
-		"birthdate":[ 0 , 0 , 0]
+		"birthdate":"date"
 		},
 	
-	"Artist":{
+	"artistData":{
 		"bandName":"e.g. AC/DC",
 		"years":"1973",
 		"BandPlace":"Sydney, Australia",
@@ -19,7 +19,7 @@
 
 
 		},
-	"Venue":{
+	"venueData":{
 		"venueName":"e.g. Hard Rock Cafe",
 		"venueLocation":{
 			"adress":"279 Yonge St",

@@ -1,0 +1,12 @@
+<h1 id="page-title"><%= title %></h1>
+<% users.forEach( function ( user ){ %>
+	
+	<% var obj = user.toJSON(user) %>
+	<% //console.log(obj) %>
+  <div class="item">
+  	<% for (var keys in obj){ if( keys !== 'password' ){%>
+    <a id="<%= keys %>">  <%= obj[keys] %> </a><br>
+    <% } }%>
+    <a class="del-btn" id="<%= user.id %>" href="/user/destroy/<%= user.id %>" title="Delete this todo item">Delete</a>
+  </div>
+<% }); %>

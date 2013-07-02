@@ -1,0 +1,47 @@
+<h1 id="page-title"><%= title %></h1>
+<form action="/search/results/" method="POST" accept-charset="utf-8">
+  <input class="input" type="text" name="search"  placeholder="search Something"/><br>
+</form>
+
+<% artists.forEach( function ( artist ){ %>
+	
+	<% var obj = artist.toJSON(artist) %>
+	<% //console.log(obj) %>
+  <div class="item">
+  	<% for (var keys in obj){ if( keys !== 'password' ){%>
+    <a id="<%= keys %>">  <%= obj[keys] %> </a><br>
+    <% } }%>
+    <a class="del-btn" id="<%= artist.id %>" href="/artist/destroy/<%= artist.id %>" title="Delete this todo item">Delete</a>
+  </div>
+<% }); %>
+
+<% venues.forEach( function ( venue ){ %>
+	
+	<% var obj = venue.toJSON(venue) %>
+	<% //console.log(obj) %>
+  <div class="item">
+  	<% for (var keys in obj){ if( keys !== 'password' ){%>
+    <a id="<%= keys %>">  <%= obj[keys] %> </a><br>
+    <% } }%>
+    <a class="del-btn" id="<%= venue.id %>" href="/venue/destroy/<%= venue.id %>" title="Delete this todo item">Delete</a>
+  </div>
+<% }); %>
+
+<% users.forEach( function ( user ){ %>
+  
+  <% var obj = user.toJSON(user) %>
+  <% //console.log(obj) %>
+  <div class="item">
+    <% for (var keys in obj){ if( keys !== 'password' ){%>
+    <a id="<%= keys %>">  <%= obj[keys] %> </a><br>
+    <% } }%>
+    <a class="del-btn" id="<%= user.id %>" href="/user/destroy/<%= user.id %>" title="Delete this todo item">Delete</a>
+  </div>
+<% }); %>
+
+<% todos.forEach( function ( todo ){ %>
+  <div class="item">
+    <a class="update-link" id="<%= todo.id%>" href="/edit/<%= todo._id %>" title="Update this todo item"><%= todo.content %></a>
+    <a class="del-btn" href="/destroy/<%= todo._id %>" title="Delete this todo item">Delete</a>
+  </div>
+<% }); %>

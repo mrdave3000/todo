@@ -3,14 +3,14 @@
  * Module dependencies.
  */
 
-<<<<<<< HEAD
+
 var express = require('express'),
 	mongoose = require('mongoose'),
 	MongoStore = require('connect-mongo')(express);
 
-=======
+
 var express = require('express');
->>>>>>> d20525b7b19e104380f460b9308bd3cb6ead5a2b
+
 var app = module.exports = express.createServer();
 
 // Configuration
@@ -26,8 +26,7 @@ app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
   app.use(express.bodyParser());
-<<<<<<< HEAD
-  app.use(express.logger());
+ /* app.use(express.logger());
   app.use(express.cookieParser());
   app.use(express.session({
     	secret: 'Your Secret',
@@ -39,11 +38,10 @@ app.configure(function(){
     	})
     })
   );
-=======
- // app.use(express.logger());
+*/
+  //app.use(express.logger());
   //app.use(express.session());
   //app.use(express.cookieParser());
->>>>>>> d20525b7b19e104380f460b9308bd3cb6ead5a2b
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
 
@@ -61,17 +59,24 @@ app.configure('production', function(){
 
 // Routes
 
-app.get('/', routes.index); //function (req, res){
-
-//	var previous      = req.session.value || 0;
-//  	req.session.value = previous + 1;
-//  	res.send('<h1>Previous value: ' + previous + '</h1>');
-
-//});
-
+app.get('/', routes.index);
+app.get('/user/all', routes.getUsers);
+app.get('/venue/all', routes.getVenues);
+app.get('/artist/all', routes.getArtists) 
+app.get('/user', routes.user);
+app.get('/venue', routes.venue);
+app.get('/artist', routes.artist); 
 app.post('/create', routes.create);
+app.post('/user/create', routes.createUser);
+app.post('/artist/create', routes.createArtist);
+app.post('/venue/create', routes.createVenue);
 app.get('/destroy/:id', routes.destroy);
+app.get('/user/destroy/:id', routes.destroyUser);
+app.get('/artist/destroy/:id', routes.destroyArtist);
+app.get('/venue/destroy/:id', routes.destroyVenue);
 app.get('/edit/:id', routes.edit);
+app.get('/search', routes.search)
+app.post('/search/results/', routes.ShowResults);
 app.post('/update/:id', routes.update);
 
 app.listen(3000, function(){

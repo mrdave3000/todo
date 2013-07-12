@@ -1,5 +1,17 @@
 {
-	"dbConnect":"mongodc://localhost/express-todo",
+	"dbConnect":"mongodb://localhost/express-todo",
+	"dbName":"express-todo",
+	
+	"collections":{
+		"users":"User",
+		"artists":"Artist",
+		"venues":"Venue",
+		"userSession":"Session",
+		"todos":"Todo"
+
+
+		},
+
 	
 	"userData":{
 		"username":"User name",
@@ -29,5 +41,14 @@
 		"genres":"#Rock #RockNRoll #HeavyMetal",
 		"contact":""
 
-		}
+		},
+
+	"folderSchema": {
+
+		"playlists":"",
+		"photos":"",
+		"albums":"",
+		"avatar":""
+
+	}	
 }

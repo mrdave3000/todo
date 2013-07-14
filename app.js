@@ -6,20 +6,13 @@
 
 var express = require('express'),
 	mongoose = require('mongoose'),
-	MongoStore = require('connect-mongo')(express);
-
-
-var express = require('express');
-
-var app = module.exports = express.createServer();
-
-// Configuration
-	require('./models');
-var routes = require('./routes');
-var definitions = require('./config.json');
-//var Session = mongoose.model('Session');
-//var db = mongoose.connect(app.set('db-uri')); 
-
+	MongoStore = require('connect-mongo')(express),
+  express = require('express'),
+  app = module.exports = express.createServer();
+  require('./models');
+var  routes = require('./routes'),
+  definitions = require('./config.json'),
+  Session = mongoose.model('Session'); 
 
 app.configure(function(){
 
@@ -27,12 +20,11 @@ app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
   app.use(express.bodyParser({keepExtensions: true, uploadDir: "uploads" }));
-  app.use(express.logger());
   app.use(express.cookieParser());
   app.use(express.session({
     	secret: 'Your Secret',
     	cookie: {
-    		maxAge : 60000
+    		maxAge : (60000)
     	},
     	store: new MongoStore({ 
         db : definitions.dbName,
@@ -40,10 +32,7 @@ app.configure(function(){
        })
     })
   );
-
-  //app.use(express.logger());
-  //app.use(express.session());
-  //app.use(express.cookieParser());
+  //app.use(express.logger({format: '\x1b[1m:method\x1b[0m \x1b[33m:url\x1b[0m :response-time ms' }));
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
 
@@ -61,31 +50,31 @@ app.configure('production', function(){
 
 // Routes
 
-app.get('/', routes.index);
-app.get('/user/all', routes.getUsers);
-app.get('/venue/all', routes.getVenues);
-app.get('/artist/all', routes.getArtists) 
-app.get('/user', routes.user);
+app.get('/', routes.loadUser, routes.index);
+app.get('/user/all', routes.loadUser, routes.getUsers);
+app.get('/venue/all', routes.loadUser, routes.getVenues);
+app.get('/artist/all', routes.loadUser, routes.getArtists) 
+app.get('/user',  routes.user);
 app.get('/venue', routes.venue);
 app.get('/artist', routes.artist); 
-app.post('/create', routes.create);
-app.post('/user/create', routes.createUser);
+app.post('/post', routes.loadUser, routes.createPost);
+app.post('/user/create',  routes.createUser);
 app.post('/artist/create', routes.createArtist);
 app.post('/venue/create', routes.createVenue);
-app.get('/destroy/:id', routes.destroy);
-app.get('/user/destroy/:id', routes.destroyUser);
-app.get('/artist/destroy/:id', routes.destroyArtist);
-app.get('/venue/destroy/:id', routes.destroyVenue);
-app.get('/edit/:id', routes.edit);
-app.get('/search', routes.search)
-app.post('/search/results/', routes.ShowResults);
-app.post('/update/:id', routes.update);
-app.get('/upload', routes.uploader);
-app.post('/upload/file/', routes.uploadFile);
-app.get('/audio', routes.test);
+app.get('/destroy/:id',routes.loadUser, routes.destroy);
+app.get('/user/destroy/:id', routes.loadUser, routes.destroyUser);
+app.get('/artist/destroy/:id', routes.loadUser, routes.destroyArtist);
+app.get('/venue/destroy/:id', routes.loadUser, routes.destroyVenue);
+app.get('/edit/:id', routes.loadUser, routes.edit);
+app.get('/search', routes.loadUser, routes.search)
+app.post('/search/results/', routes.loadUser, routes.ShowResults);
+app.post('/update/:id', routes.loadUser, routes.update);
+app.get('/upload', routes.loadUser, routes.uploader);
+app.post('/upload/file/', routes.loadUser, routes.uploadFile);
+app.get('/audio', routes.loadUser, routes.test);
 app.get('/session', routes.showLogin);
 app.post('/session/new', routes.login);
-app.get('/session/close', routes.logOut);
+app.get('/session/close', routes.loadUser, routes.logOut);
 
 
 app.listen(3000, function(){

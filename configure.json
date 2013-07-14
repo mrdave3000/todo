@@ -1,6 +1,6 @@
 {
 	"dbConnect":"mongod://localhost/express-todo",
-	"TodoSchema":"Todo",
+	"postschema":"Post",
 	"indexMessages": [ 
 
 	

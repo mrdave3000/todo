@@ -3,10 +3,12 @@ var Schema = mongoose.Schema;
 var definitions = require('./configure.json');
 
 
-var Todo = new Schema({
-	user_id : String,
+var Post = new Schema({
+	user : Object,
 	content: String,
-	update_at: Date
+	published: Date,
+	tags: Array,
+	Images: Array
 }, { strict: false });
 
 var User = new Schema({}, { strict: false });
@@ -14,7 +16,18 @@ var Venue = new Schema({}, { strict: false });
 var Artist = new Schema({},{ strict: false });
 var Session = new Schema({},{ strict: false});
 
-mongoose.model('Todo', Todo);
+User.method('authenticate', function (usersession) {
+	
+	var object = this.toObject();
+    return usersession.password == object.password.toString();
+  
+  });
+
+Post.method('consolePost', function(){
+	console.log(this.toObject());
+});
+
+mongoose.model('Post', Post);
 mongoose.model('User', User);
 mongoose.model('Artist', Artist);
 mongoose.model('Venue', Venue);

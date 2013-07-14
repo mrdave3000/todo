@@ -4,10 +4,13 @@
 	<div class="item-new">
 	<% for (var key in definitions.userData){ %>
 		
+		<% if( key == 'password' ){%>
+		<input class="input" type="password" name="<%= key %>"  placeholder="<%= definitions.userData[key] %>"/><br>
+		<% }else{ %>
 		<input class="input" type="text" name="<%= key %>"  placeholder="<%= definitions.userData[key] %>"/><br>
 
 		
-	<%  } %>
+	<%  }} %>
 
 </div></div>
 	<h2> Venue Info</h2>

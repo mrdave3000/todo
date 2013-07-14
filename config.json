@@ -7,11 +7,8 @@
 		"artists":"Artist",
 		"venues":"Venue",
 		"userSession":"Session",
-		"todos":"Todo"
-
-
+		"posts":"Post"
 		},
-
 	
 	"userData":{
 		"username":"User name",

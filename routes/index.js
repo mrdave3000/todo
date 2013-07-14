@@ -13,12 +13,13 @@ var browserify = require('browserify');
 var webaudio = require('webaudio');
 
 //models
-var	Todo = mongoose.model('Todo'),
+var	Post = mongoose.model('Post'),
 	User = mongoose.model('User'),
 	Artist = mongoose.model('Artist'),
 	Venue = mongoose.model('Venue'),
 	Session = mongoose.model('Session');
 
+var crypto = require('crypto');
 
 var definitions = require('../config.json');
 var fs = require('fs');
@@ -26,6 +27,12 @@ var fs = require('fs');
  var venueData = {},
 	 userData = {},
 	 artistData = {};
+
+dataCrypt = function(data){
+
+
+},
+
 
 voidData = function(who){
 
@@ -40,6 +47,7 @@ initUserEnvirorment = function(who){
 	if (!err) {
 
 		folderSchema(who);
+		voidData(userData);
 		console.log('folder Created');
 		
 		}
@@ -67,43 +75,60 @@ folderSchema = function(who){
 
 exports.loadUser = function (req, res, next){
 
-	if (req.session.user_id) {
-		User.findById(req.session.user_id, function (err, user){ 
+	if (req.session.userId) {
+		User.findById(req.session.userId, function (err, user){ 
 
 			if(user){
-
 				req.currentUser = user;
 				next();
 			}else{
 
-				res.redirect('session/new');
+				res.redirect('/session');
 			}
 
 		});
 	}else{
 
-		res.redirect('session/new');
+		res.redirect('/session');
 
 	}
 
 },
 exports.login = function(req, res){
+	
+	var usersession = {};
+	var userQuery = new RegExp(req.body.username , 'i');
+	var passwordQuery = new RegExp(req.body.password, 'i'); 	
+	var Query = User.find();
+	//console.log(Query);
 
-
-
-
-
+	Query.findOne().where('username', userQuery).exec(function(err, user){
+		usersession.password = req.body.password;
+		console.log(user);
+			if(user && user.authenticate((usersession))){
+						req.session.userType = user.userType;
+						req.session.username = user.username;
+						req.session.validated = true;
+						req.session.userId = user._id;
+						res.redirect('/');
+					}else{
+						res.redirect('/session');
+					}
+		});
 },
 
 exports.showLogin = function(req, res){
 
-	var sessionObj = req.session;
-	console.log(sessionObj);
 	res.render('login', { title: "please log-in" });
 
 },
 
 exports.logOut = function(req, res){
+
+	if (req.session) {
+    req.session.destroy(function() {});
+  }
+  res.redirect('/session');
 
 },
 
@@ -116,13 +141,13 @@ exports.index = function(req, res){
 		res.send(sessions);
 	});
 */
-	Todo.find(function (err, todos, count){
+	Post.find(function (err, posts, count){
 	  if(!err){
 	  	//console.log(definitions);
 	  	//console.log(definitions.dbConnect);
-	  	res.render('index', { title: 'My Todo List!',
+	  	res.render('index', { title: 'My Post List!',
 
-	  						  todos: todos,
+	  						  posts: posts,
 
 	  	});
 	  	
@@ -138,33 +163,39 @@ exports.index = function(req, res){
 	},
 exports.getUsers = function(req, res){
 	
-	//console.log(definitions);
-	
-	User.find(function (err, users, count){
-		if(!err){
-			res. render('users', {title:"Users found",
-									users: users });
-		}
-	});
+	var Query = User.find();
+	 Query.where('userType', 'user').exec(function(err, users){
+	 	if(!err && users){
+	 		res.render('users', {title: "Users Found", users: users });
+	 	}else{
+
+	 	}
+	 });
 },
 
 exports.getArtists = function(req, res){
 
-	Artist.find(function (err, artists, count){
-		if(!err){
-			res.render('artists', {title:"Artists Found",
-									artists: artists });
-		}
-	});
+	var Query = User.find();
+	 Query.where('userType', 'artist').exec(function(err, users){
+	 	if(!err && users){
+	 		res.render('users', {title: "Users Found", users: users });
+	 	}else{
+
+	 	}
+	 });
+	
 },
 
 exports.getVenues = function(req, res){
 	
-	Venue.find(function (err, venues, count){
-			res.render('venues', {title:"Venues Found",
-								venues: venues
-		});
-	});
+	var Query = User.find();
+	 Query.where('userType', 'venue').exec(function(err, users){
+	 	if(!err && users){
+	 		res.render('users', {title: "Users Found", users: users });
+	 	}else{
+
+	 	}
+	 });
 },
 
 exports.user = function(req, res){
@@ -187,21 +218,27 @@ exports.artist = function(req, res){
 });
 },
 
-exports.create = function (req, res){
-	new Todo({
-		content : req.body.content,
-		update_at: Date.now()
-	}).save(function (err, todo, count){
-		if(!err){
-			res.redirect('/');
-		}else{
-			console.log(definitions.indexMessages[2]);
+exports.createPost = function (req, res){
+
+	User.findById(req.session.userId).exec(function (err, user){
+		if(user && req.session.validated && !err){
+			new Post({
+					user : user,		
+					content : req.body.content,
+					published: Date.now()
+					}).save(function (err, post, count){
+						if(!err){
+							res.redirect('/');
+						}
+					})
+
 		}
 	});
-};
+},
 
 exports.createUser = function(req, res){
 	var userData = {};
+	userData.userType = "user";
 	for (var key in definitions.userData){
 		userData[key] = req.body[key];
 	}
@@ -218,15 +255,16 @@ exports.createUser = function(req, res){
 exports.createArtist = function(req, res){
 	var userData = {};
 	var artistData = {};
+	    userData.userType = "artist";
 	
 	for (var key in definitions.userData){
-		artistData[key] = req.body[key];
+		userData[key] = req.body[key];
 	}
 
 	for (var key in definitions.artistData){
-		artistData[key] = req.body[key]; 
+		userData[key] = req.body[key]; 
 	}
-	new Artist( artistData ).save(function (err, artist, count){
+	new User( userData ).save(function (err, artist, count){
 		if(!err){
 			voidData(userData);
 			voidData(artistData);
@@ -240,15 +278,16 @@ exports.createVenue = function(req, res){
 
 	var userData = {};
 	var venueData = {};
+	userData.userType = "venue";
 
 	for (var key in definitions.userData){
-		venueData[key] = req.body[key];
+		userData[key] = req.body[key];
 	}
 	for (var key in definitions.venueData){
-		venueData[key] = req.body[key];
+		userData[key] = req.body[key];
 	}
-	console.log(venueData);
-	new Venue(venueData).save(function (err, venue, count){
+	
+	new User(userData).save(function (err, venue, count){
 		if(!err){
 			voidData(userData);
 			voidData(venueData);
@@ -258,9 +297,9 @@ exports.createVenue = function(req, res){
 },
 
 exports.destroy = function (req, res){
-	Todo.findById(req.params.id, function (err, todo){
+	Post.findById(req.params.id, function (err, post){
 		if(!err){
-			todo.remove(function (err, todo){
+			post.remove(function (err, post){
 				if(!err){
 
 					res.redirect('/');
@@ -276,14 +315,11 @@ exports.destroy = function (req, res){
 
 exports.destroyUser = function(req, res){
 	User.findById(req.params.id, function (err, user){
-		if(!err){
-			user.remove(function (err, user){
-				if(!err){
-
-					res.redirect('/user/all');
+		if(!err && user){
 				
-				}
-			});
+				user.remove(function (err, user){
+					res.redirect('/user/all');
+				});
 		}else{
 			res.render('index',{title: definitions.indexMessages[2]});
 		}
@@ -323,10 +359,10 @@ exports.destroyVenue = function(req, res){
 },
 
 exports.edit = function(req, res){
-	Todo.find(function (err, todos){
+	Post.find(function (err, posts){
 		res.render('edit', {	
 			title: definitions.indexMessages[1],
-			todos: todos,
+			posts: posts,
 			current: req.params.id
 
 		});
@@ -334,11 +370,11 @@ exports.edit = function(req, res){
 },
 
 exports.update = function (req, res){
-	Todo.findById(req.params.id, function (err, todo){ 
+	Post.findById(req.params.id, function (err, post){ 
 
-		todo.content = req.body.content;
-		todo.update_at = Date.now();
-		todo.save(function (err, todo, count){
+		post.content = req.body.content;
+		post.update_at = Date.now();
+		post.save(function (err, post, count){
 			if(!err){
 				res.redirect('/');
 
@@ -356,27 +392,19 @@ exports.search = function(req, res){
 },
 
 exports.ShowResults = function(req, res){
-	//var todoFound = false;
+	//var postFound = false;
 	//var userFound = false;
 	//var artistFound = false;
 	//var venueFound = false;
 	var query = new RegExp(req.body.search, 'i');
-
-	console.log(query);
 	
-	Todo.find().or({'content':query}).exec(function (err, todos){
+	Post.find().or({'content':query}).exec(function (err, posts){
 				User.find({'username':query }).or({'email':query}).exec(function (err, users){
-					Artist.find({'username':query }).or({'email':query}).exec(function (err, artists){
-						Venue.find({'username':query }).or({'email':query}).exec(function (err, venues){
 							res.render('searchResults', {  title:"Results for " + req.body.search,
-													todos: todos,
-													users: users,
-													artists: artists,
-													venues: venues 
+													Posts: Posts,
+													users: users
 		
 												 });
-						});
-					});
 		
 				});
 

@@ -11,6 +11,7 @@
     "browserify": "~2.25.0",
     "socket.io": "~0.9.16",
     "express.io": "~1.1.12",
-    "socket.io-client": "~0.9.16"
+    "socket.io-client": "~0.9.16",
+    "jade": "~0.33.0"
   }
 }

@@ -233,7 +233,7 @@ exports.createPost = function (req, res){
 							res.update('/', {posts: posts});
 						}
 					});
-					io.emit('posted');
+					//io.emit('posted');
 
 		}
 	});

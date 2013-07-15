@@ -7,7 +7,8 @@
 var express = require('express.io'),
 	mongoose = require('mongoose'),
 	MongoStore = require('connect-mongo')(express),
-  app = module.exports = express.createServer();
+  app = express();
+  //app = module.exports = express.createServer();
   require('./models');
   app.http().io();
 var  routes = require('./routes'),
@@ -17,10 +18,10 @@ var  routes = require('./routes'),
 app.configure(function(){
 
   app.set('port', process.env.PORT || 3000);
-  app.set('db-uri', definitions.dbConnect);
   app.set('views', __dirname + '/views');
-  app.set('view engine', 'ejs');
-  app.use(express.bodyParser({keepExtensions: true, uploadDir: "uploads" }));
+  //app.set('view engine', 'ejs');
+  app.set('view engine', 'jade');
+  app.set('db-uri', definitions.dbConnect);
   app.use(express.cookieParser());
   app.use(express.session({
     	secret: 'Your Secret',
@@ -34,6 +35,9 @@ app.configure(function(){
     })
   );
   //app.use(express.logger({format: '\x1b[1m:method\x1b[0m \x1b[33m:url\x1b[0m :response-time ms' }));
+  app.use(express.favicon());
+  app.use(express.bodyParser({keepExtensions: true, uploadDir: "uploads" }));
+  app.use(express.methodOverride());
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
 

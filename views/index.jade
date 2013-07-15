@@ -1,0 +1,28 @@
+extend layout
+
+block content
+  h1= title
+  #list
+  form(action='/post/', method='POST', accept-charset='utf-8')
+    input(class='input', type='text', name='content')
+
+- posts.forEach(function(post){
+  
+  .item
+    a(class='userType' ) #{post.user.userType}
+    br
+    a(class='username' ) #{post.user.username}
+    br
+    a(class='content' )   #{post.content}
+    br
+    a(class='update-link', href='/edit/#{post._id}') update
+    br
+    a(class='del-btn', href='/destry/#{post._id}') delete
+    br
+   
+- })
+
+
+
+
+

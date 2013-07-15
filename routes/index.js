@@ -10,7 +10,7 @@ var mongoose = require('mongoose'),
 var messages = require('../configure.json');
 
 var browserify = require('browserify');
-var webaudio = require('webaudio');
+//var webaudio = require('webaudio');
 
 //models
 var	Post = mongoose.model('Post'),
@@ -132,35 +132,7 @@ exports.logOut = function(req, res){
 
 },
 
-exports.index = function(req, res){
-/*
-	Session.find({}, function (err, sessions){
-		if(err){
-			console.log("there is no sessions");
-		}
-		res.send(sessions);
-	});
-*/
-	Post.find(function (err, posts, count){
-	  if(!err){
-	  	//console.log(definitions);
-	  	//console.log(definitions.dbConnect);
-	  	res.render('index', { title: 'My Post List!',
 
-	  						  posts: posts,
-
-	  	});
-	  	
-	  
-	  }else{
-
-	  	res.render('index', { title: definitions.indexMessages[2] });
-	  	
-	  }
-	  
-	});
-
-	},
 exports.getUsers = function(req, res){
 	
 	var Query = User.find();
@@ -218,6 +190,36 @@ exports.artist = function(req, res){
 });
 },
 
+exports.index = function(req, res){
+/*
+	Session.find({}, function (err, sessions){
+		if(err){
+			console.log("there is no sessions");
+		}
+		res.send(sessions);
+	});
+*/
+	Post.find(function (err, posts, count){
+	  if(!err){
+	  	//console.log(definitions);
+	  	//console.log(definitions.dbConnect);
+	  	res.render('index', { title: 'My Post List!',
+
+	  						  posts: posts,
+
+	  	});
+	  	
+	  
+	  }else{
+
+	  	res.render('index', { title: definitions.indexMessages[2] });
+	  	
+	  }
+	  
+	});
+
+	},
+
 exports.createPost = function (req, res){
 
 	User.findById(req.session.userId).exec(function (err, user){
@@ -228,13 +230,34 @@ exports.createPost = function (req, res){
 					published: Date.now()
 					}).save(function (err, post, count){
 						if(!err){
-							res.redirect('/');
+							res.update('/', {posts: posts});
 						}
-					})
+					});
+					io.emit('posted');
 
 		}
 	});
 },
+
+exports.isPosted = function(req, res){
+	
+	console.log(posted);
+	req.io.emit('posted', {
+
+		posts: function(){
+
+			Post.find(function (err, posts, count){
+				if(posts && !err){
+					res.update('/', { posts: posts });
+				}
+			});
+
+		}
+
+	});
+},
+
+
 
 exports.createUser = function(req, res){
 	var userData = {};

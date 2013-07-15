@@ -4,18 +4,19 @@
  */
 
 
-var express = require('express'),
+var express = require('express.io'),
 	mongoose = require('mongoose'),
 	MongoStore = require('connect-mongo')(express),
-  express = require('express'),
   app = module.exports = express.createServer();
   require('./models');
+  app.http().io();
 var  routes = require('./routes'),
   definitions = require('./config.json'),
   Session = mongoose.model('Session'); 
 
 app.configure(function(){
 
+  app.set('port', process.env.PORT || 3000);
   app.set('db-uri', definitions.dbConnect);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
@@ -50,34 +51,41 @@ app.configure('production', function(){
 
 // Routes
 
-app.get('/', routes.loadUser, routes.index);
-app.get('/user/all', routes.loadUser, routes.getUsers);
-app.get('/venue/all', routes.loadUser, routes.getVenues);
-app.get('/artist/all', routes.loadUser, routes.getArtists) 
-app.get('/user',  routes.user);
-app.get('/venue', routes.venue);
-app.get('/artist', routes.artist); 
-app.post('/post', routes.loadUser, routes.createPost);
-app.post('/user/create',  routes.createUser);
-app.post('/artist/create', routes.createArtist);
-app.post('/venue/create', routes.createVenue);
-app.get('/destroy/:id',routes.loadUser, routes.destroy);
-app.get('/user/destroy/:id', routes.loadUser, routes.destroyUser);
-app.get('/artist/destroy/:id', routes.loadUser, routes.destroyArtist);
-app.get('/venue/destroy/:id', routes.loadUser, routes.destroyVenue);
-app.get('/edit/:id', routes.loadUser, routes.edit);
-app.get('/search', routes.loadUser, routes.search)
+app.get('/search', routes.loadUser, routes.search);
 app.post('/search/results/', routes.loadUser, routes.ShowResults);
+
+app.get('/', routes.loadUser, routes.index);
+app.post('/post', routes.loadUser, routes.createPost);
+app.get('/destroy/:id',routes.loadUser, routes.destroy);
+app.get('/edit/:id', routes.loadUser, routes.edit);
 app.post('/update/:id', routes.loadUser, routes.update);
+
+app.get('/user',  routes.user);
+app.post('/user/create',  routes.createUser);
+app.get('/user/all', routes.loadUser, routes.getUsers);
+app.get('/user/destroy/:id', routes.loadUser, routes.destroyUser);
+
+app.get('/venue', routes.venue);
+app.post('/venue/create', routes.createVenue);
+app.get('/venue/all', routes.loadUser, routes.getVenues);
+app.get('/venue/destroy/:id', routes.loadUser, routes.destroyVenue);
+
+app.get('/artist', routes.artist);
+app.post('/artist/create', routes.createArtist);
+app.get('/artist/all', routes.loadUser, routes.getArtists);
+app.get('/artist/destroy/:id', routes.loadUser, routes.destroyArtist);
+
 app.get('/upload', routes.loadUser, routes.uploader);
 app.post('/upload/file/', routes.loadUser, routes.uploadFile);
-app.get('/audio', routes.loadUser, routes.test);
+
 app.get('/session', routes.showLogin);
 app.post('/session/new', routes.login);
 app.get('/session/close', routes.loadUser, routes.logOut);
 
+app.get('/audio', routes.loadUser, routes.test);
 
-app.listen(3000, function(){
-  console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+
+app.listen(app.get('port'), function(){
+  console.log("Express server listening on port %d in %s mode", app.get('port'), app.settings.env);
   //console.log(definitions);
 });

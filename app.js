@@ -24,7 +24,7 @@ app.configure(function(){
   app.use(express.session({
     	secret: 'Your Secret',
     	cookie: {
-    		maxAge : (60000)
+    		maxAge : (60000 * 5)
     	},
     	store: new MongoStore({ 
         db : definitions.dbName,

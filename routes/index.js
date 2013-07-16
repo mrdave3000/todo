@@ -199,11 +199,12 @@ exports.index = function(req, res){
 		res.send(sessions);
 	});
 */
-	Post.find(function (err, posts, count){
-	  if(!err){
+	Post.find().lean().exec(function (err, posts, count){
+	  if(!err && posts){
+	  	//console.log(posts);
 	  	//console.log(definitions);
 	  	//console.log(definitions.dbConnect);
-	  	res.render('index', { title: 'My Post List!',
+	  	res.render('index', { title: 'Returning posts',
 
 	  						  posts: posts,
 
@@ -212,7 +213,7 @@ exports.index = function(req, res){
 	  
 	  }else{
 
-	  	res.render('index', { title: definitions.indexMessages[2] });
+	  	res.render('index', { title:'no posts found'});
 	  	
 	  }
 	  
@@ -230,7 +231,7 @@ exports.createPost = function (req, res){
 					published: Date.now()
 					}).save(function (err, post, count){
 						if(!err){
-							res.update('/', {posts: posts});
+							res.redirect('/');
 						}
 					});
 					//io.emit('posted');
@@ -248,7 +249,7 @@ exports.isPosted = function(req, res){
 
 			Post.find(function (err, posts, count){
 				if(posts && !err){
-					res.update('/', { posts: posts });
+					res.redirect('/');
 				}
 			});
 
@@ -422,9 +423,9 @@ exports.ShowResults = function(req, res){
 	var query = new RegExp(req.body.search, 'i');
 	
 	Post.find().or({'content':query}).exec(function (err, posts){
-				User.find({'username':query }).or({'email':query}).exec(function (err, users){
+				User.find({'username':query }).or({'email':query}).lean().exec(function (err, users){
 							res.render('searchResults', {  title:"Results for " + req.body.search,
-													Posts: Posts,
+													posts: posts,
 													users: users
 		
 												 });

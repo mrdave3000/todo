@@ -1,23 +1,31 @@
-<h1 id="page-title"><%= title %></h1>
-<form action="/search/results/" method="POST" accept-charset="utf-8">
-  <input class="input" type="text" name="search"  placeholder="search Something"/><br>
-</form>
+extend layout
 
-<% users.forEach( function ( user ){ %>
+block content
+  h1#page-title= title
+  form(action='/search/results/', method='POST', accept-charset='utf-8')
+    input(class='input', type='text', name='search', placeholder='Search Something...')
+
+
+  - users.forEach(function(user){
+
+    .item
+      
+      -for(var key in user){ if(keys !== 'password'){
+        a(id='#{key}') #{user[key]}
+        br 
+      - }}
+      a(class='del-btn', id='#{user._id}', href='/user/destroy/#{user._id}' ) Delete
+      br
   
-  <% var obj = user.toJSON(user) %>
-  <% //console.log(obj) %>
-  <div class="item">
-    <% for (var keys in obj){ if( keys !== 'password' ){%>
-    <a id="<%= keys %>">  <%= obj[keys] %> </a><br>
-    <% } }%>
-    <a class="del-btn" id="<%= user.id %>" href="/user/destroy/<%= user.id %>" title="Delete this todo item">Delete</a>
-  </div>
-<% }); %>
+  -  });
 
-<% posts.forEach( function ( todo ){ %>
-  <div class="item">
-    <a class="update-link" id="<%= todo.id%>" href="/edit/<%= todo._id %>" title="Update this todo item"><%= todo.content %></a>
-    <a class="del-btn" href="/destroy/<%= todo._id %>" title="Delete this todo item">Delete</a>
-  </div>
-<% }); %>
+  -posts.forEach(function(post){
+      .item
+        a(class='update-link', id='#{post._id}') #{post.content}
+        br
+        a(class='del-btn', id='#{post._id}', href='/post/destroy/#{post._id}') Delete
+
+  -  });
+
+
+

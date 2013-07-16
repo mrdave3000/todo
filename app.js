@@ -19,7 +19,8 @@ app.configure(function(){
   app.set('db-uri', definitions.dbConnect);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
-  app.use(express.bodyParser({keepExtensions: true, uploadDir: "uploads" }));
+  app.use(express.static(__dirname + '/public'));
+  app.use(express.bodyParser({keepExtensions: true, uploadDir:  "/public/uploads"}));
   app.use(express.cookieParser());
   app.use(express.session({
     	secret: 'Your Secret',
@@ -34,7 +35,8 @@ app.configure(function(){
   );
   //app.use(express.logger({format: '\x1b[1m:method\x1b[0m \x1b[33m:url\x1b[0m :response-time ms' }));
   app.use(app.router);
-  app.use(express.static(__dirname + '/public'));
+  
+  
 
 });
 

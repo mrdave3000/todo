@@ -8,7 +8,7 @@ var Post = new Schema({
 	content: String,
 	published: Date,
 	tags: Array,
-	Images: Array
+	Images: Object
 }, { strict: false });
 
 var User = new Schema({}, { strict: false });

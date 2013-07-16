@@ -220,10 +220,17 @@ exports.artist = function(req, res){
 
 exports.createPost = function (req, res){
 
-	User.findById(req.session.userId).exec(function (err, user){
+	console.log("file name", req.files.file.name);                                           
+    console.log("file path", req.files.file.path);  
+
+	//res.end("upload complete");
+
+	User.findById(req.session.userId).lean().exec(function (err, user){
 		if(user && req.session.validated && !err){
+			var images = req.files.file;
 			new Post({
-					user : user,		
+					user : user,
+					Images: images,		
 					content : req.body.content,
 					published: Date.now()
 					}).save(function (err, post, count){
